@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "43827E19AFFA30AC44CE10FC"
+               BlueprintIdentifier = "327DB198E3A9E0D3A809A0EC"
                BuildableName = "libPods-RailsNetworkingApp.a"
                BlueprintName = "Pods-RailsNetworkingApp"
                ReferencedContainer = "container:Pods.xcodeproj">

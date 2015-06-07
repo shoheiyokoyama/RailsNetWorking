@@ -80,11 +80,13 @@
 {
     NSLog(@"Button tapped.");
     NSLog(@"%@", tf.text);
-    
+
     NSDictionary *params = [NSDictionary dictionaryWithObject:tf.text forKey:@"top[name]"];
     
-    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
-    [manager POST:LISTURL parameters:params
+    AFHTTPRequestOperationManager *manager = [[AFHTTPRequestOperationManager alloc]initWithBaseURL:[[NSURL alloc] initWithString:@"http://localhost:3000"]];
+    manager.requestSerializer = [AFHTTPRequestSerializer serializer];
+    [manager POST:@"/tops"
+       parameters:params
           success:^(AFHTTPRequestOperation *operation, id responseObject){
 
               NSLog(@"success: %@", responseObject);
