@@ -1,5 +1,5 @@
 //
-//  ViewController.h
+//  RNViewController.h
 //  RailsNetworkingApp
 //
 //  Created by 横山祥平 on 2015/06/07.
@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ViewController : UIViewController
+@interface RNViewController : UIViewController
 
 
 @end
