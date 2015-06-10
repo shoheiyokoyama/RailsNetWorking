@@ -7,7 +7,6 @@
 //
 
 #import "RNViewController.h"
-#import <AFNetworking.h>
 #import "RailsListManager.h"
 
 @interface RNViewController ()<UITextFieldDelegate,UITableViewDelegate,UITableViewDataSource>
@@ -15,6 +14,7 @@
 @property (nonatomic) UIButton *postButton;
 @property (nonatomic) UITableView *tableView;
 @property (nonatomic) NSMutableArray *lists;
+@property (nonatomic, weak, readonly) RailsListManager *manager;
 @end
 
 @implementation RNViewController
@@ -47,6 +47,11 @@
         [self.view addSubview:postButton];
     }
     return self;
+}
+
+- (RailsListManager *)manager
+{
+    return [RailsListManager sharedManager];
 }
 
 - (void)loadView
@@ -91,7 +96,7 @@
 
 - (void)getListsData
 {
-    [[RailsListManager sharedManager] getJsonData:^(NSMutableArray *posts, NSError *error)
+    [self.manager getJsonData:^(NSMutableArray *posts, NSError *error)
      {
          if (error) {
              [self showAlert:@"読み込みに失敗しました"];
@@ -141,7 +146,7 @@
     if ([textField.text isEqualToString:@""]) {
         [self showAlert:@"文字を入力してください"];
     } else {
-        [[RailsListManager sharedManager] postJsonData:textField.text completionHandler:^(NSError *error)
+        [self.manager postJsonData:textField.text completionHandler:^(NSError *error)
          {
              if (error) {
                  [self showAlert:@"投稿できませんでした"];

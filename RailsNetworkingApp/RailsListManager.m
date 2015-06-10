@@ -74,7 +74,6 @@ static RailsListManager *sharedManager = nil;
                  completionHandler(nil, error);
              }
          }];
-    
 }
 
 @end
