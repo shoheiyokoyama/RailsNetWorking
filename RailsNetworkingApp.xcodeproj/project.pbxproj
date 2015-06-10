@@ -16,6 +16,7 @@
 		6DB837591B244092000AB9AC /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6DB837581B244092000AB9AC /* Images.xcassets */; };
 		6DB8375C1B244092000AB9AC /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6DB8375A1B244092000AB9AC /* LaunchScreen.xib */; };
 		6DB837681B244093000AB9AC /* RailsNetworkingAppTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 6DB837671B244093000AB9AC /* RailsNetworkingAppTests.m */; };
+		6DB837761B283E7D000AB9AC /* RailsListManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6DB837751B283E7D000AB9AC /* RailsListManager.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -43,6 +44,8 @@
 		6DB837611B244093000AB9AC /* RailsNetworkingAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RailsNetworkingAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		6DB837661B244093000AB9AC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6DB837671B244093000AB9AC /* RailsNetworkingAppTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RailsNetworkingAppTests.m; sourceTree = "<group>"; };
+		6DB837741B283E7D000AB9AC /* RailsListManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RailsListManager.h; sourceTree = "<group>"; };
+		6DB837751B283E7D000AB9AC /* RailsListManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RailsListManager.m; sourceTree = "<group>"; };
 		BB0B97AEE0DF646AE54B97F7 /* Pods-RailsNetworkingApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RailsNetworkingApp.release.xcconfig"; path = "Pods/Target Support Files/Pods-RailsNetworkingApp/Pods-RailsNetworkingApp.release.xcconfig"; sourceTree = "<group>"; };
 		DAC096E78752104813172CA7 /* libPods-RailsNetworkingApp.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-RailsNetworkingApp.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		EC4517F31885168DB0258408 /* Pods-RailsNetworkingApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RailsNetworkingApp.debug.xcconfig"; path = "Pods/Target Support Files/Pods-RailsNetworkingApp/Pods-RailsNetworkingApp.debug.xcconfig"; sourceTree = "<group>"; };
@@ -103,6 +106,8 @@
 				6DB8374D1B244092000AB9AC /* AppDelegate.m */,
 				6DB837521B244092000AB9AC /* RNViewController.h */,
 				6DB837531B244092000AB9AC /* RNViewController.m */,
+				6DB837741B283E7D000AB9AC /* RailsListManager.h */,
+				6DB837751B283E7D000AB9AC /* RailsListManager.m */,
 				6DB837551B244092000AB9AC /* Main.storyboard */,
 				6DB837581B244092000AB9AC /* Images.xcassets */,
 				6DB8375A1B244092000AB9AC /* LaunchScreen.xib */,
@@ -281,6 +286,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6DB837761B283E7D000AB9AC /* RailsListManager.m in Sources */,
 				6DB837511B244092000AB9AC /* RailsNetworkingApp.xcdatamodeld in Sources */,
 				6DB8374E1B244092000AB9AC /* AppDelegate.m in Sources */,
 				6DB837541B244092000AB9AC /* RNViewController.m in Sources */,

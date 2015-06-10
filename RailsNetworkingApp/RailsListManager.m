@@ -8,36 +8,73 @@
 
 #import "RailsListManager.h"
 #import <AFNetworking.h>
-#import "AFHTTPRequestOperationManager.h"
 
+#define LISTURL @"http://localhost:3000/tops.json"
 @interface RailsListManager()
-//@property (nonatomic) AFHTTPRequestOperationManager *manager;
+@property (nonatomic) NSMutableArray *posts;
 @end
 
 @implementation RailsListManager
 
-//+ (RailsListManager *)sharedManager
-//{
-//    @synchronized(self) {
-//        if (!manager) {
-//            manager = [[AFHTTPRequestOperationManager manager] initWithBaseURL:[[NSURL alloc] initWithString:@"http://example.com"]]];
-//            manager.requestSerializer = [AFHTTPRequestSerializer serializer];
-//            [manager.requestSerializer setValue:@"gzip, deflate" forHTTPHeaderField:@"Accept-Encoding"];
-//            [manager.requestSerializer setValue:[Util userAgent] forHTTPHeaderField:@"User-Agent"];
-//        }
-//    }
-//    return manager;
-//}
-
-+ (instancetype)shared
+static RailsListManager *sharedManager = nil;
++ (instancetype)sharedManager
 {
-    static RailsListManager *_shared = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        _shared = [[self alloc] init];
+        sharedManager = [[RailsListManager alloc] init];
     });
+    return sharedManager;
+}
+
+- (void)postJsonData:(NSString*)text
+{
     
-    return _shared;
+    NSDictionary *params = [NSDictionary dictionaryWithObject:text forKey:@"top[name]"];
+    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+    manager.requestSerializer = [AFHTTPRequestSerializer serializer];
+    
+    [manager POST:LISTURL
+       parameters:params
+          success:^(AFHTTPRequestOperation *operation, id responseObject){
+              NSLog(@"success: %@", responseObject);
+              
+              if(self.completionHandlerPostRemote){
+                  self.completionHandlerPostRemote(nil);
+              }
+          }
+          failure:^(AFHTTPRequestOperation *operation, NSError *error){
+              NSLog(@"error: %@", error);
+              
+              if(self.completionHandlerPostRemote){
+                  self.completionHandlerPostRemote(error);
+              }
+          }];
+}
+
+- (void)getJsonData
+{
+    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+    [manager GET:LISTURL parameters:nil
+         success:^(AFHTTPRequestOperation *operation, id responseObject){
+             NSLog(@"success: %@", responseObject);
+             _posts = [NSMutableArray array];
+             
+             for (NSDictionary *jsonObject in responseObject) {
+                 [_posts addObject:[jsonObject objectForKey:@"name"]];
+             }
+             
+             if (self.completionHandlerGetRemote) {
+                 self.completionHandlerGetRemote(_posts, nil);
+             }
+         }
+         failure:^(AFHTTPRequestOperation *operation, NSError *error){
+             
+             NSLog(@"error: %@", error);
+             if (self.completionHandlerGetRemote) {
+                 self.completionHandlerGetRemote(nil, error);
+             }
+         }];
+
 }
 
 @end

@@ -8,8 +8,8 @@
 
 #import "RNViewController.h"
 #import <AFNetworking.h>
+#import "RailsListManager.h"
 
-#define LISTURL @"http://localhost:3000/tops.json"
 @interface RNViewController ()<UITextFieldDelegate,UITableViewDelegate,UITableViewDataSource>
 @property (nonatomic) UITextField* postText;
 @property (nonatomic) UIButton *postButton;
@@ -130,42 +130,25 @@
     NSLog(@"Button tapped.");
     NSLog(@"%@", postText.text);
 
-    NSDictionary *params = [NSDictionary dictionaryWithObject:postText.text forKey:@"top[name]"];
-    
-    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
-    manager.requestSerializer = [AFHTTPRequestSerializer serializer];
-    [manager POST:LISTURL
-       parameters:params
-          success:^(AFHTTPRequestOperation *operation, id responseObject){
-              NSLog(@"success: %@", responseObject);
-              postText.text = @"";
-          }
-          failure:^(AFHTTPRequestOperation *operation, NSError *error){
-              NSLog(@"error: %@", error);
-          }];
-    
+    [[RailsListManager sharedManager] postJsonData:postText.text];
+    [RailsListManager sharedManager].completionHandlerPostRemote=^(NSError *error){
+        if (error) {
+            //
+        }
+        postText.text = @"";
+    };
 }
 
 - (void)tapGetButton:(UITapGestureRecognizer *)sender
 {
-    
-    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
-    [manager GET:LISTURL parameters:nil
-         success:^(AFHTTPRequestOperation *operation, id responseObject){
-             
-             NSLog(@"success: %@", responseObject);
-             
-             _lists = [NSMutableArray array];
-             for (NSDictionary *jsonObject in responseObject) {
-                 
-                 [_lists addObject:[jsonObject objectForKey:@"name"]];
-             }
-             [_tableView reloadData];
-         }
-         failure:^(AFHTTPRequestOperation *operation, NSError *error){
-             
-             NSLog(@"error: %@", error);
-         }];
+    [[RailsListManager sharedManager] getJsonData];
+    [RailsListManager sharedManager].completionHandlerGetRemote=^(NSMutableArray *posts, NSError * error){
+        if (error) {
+            //
+        }
+        _lists = posts;
+        [_tableView reloadData];
+    };
 }
 
 # pragma mark - UITextFieldDelegate

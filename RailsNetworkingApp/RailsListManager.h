@@ -7,8 +7,11 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "AFHTTPSessionManager.h"
 
-@interface RailsListManager : AFHTTPSessionManager
-+ (instancetype)shared;
+@interface RailsListManager : NSObject
++ (instancetype)sharedManager;
+- (void)postJsonData:(NSString*)text;
+- (void)getJsonData;
+@property (copy) void (^completionHandlerPostRemote)(NSError *error);
+@property (copy) void (^completionHandlerGetRemote)(NSMutableArray *post, NSError *error);
 @end
