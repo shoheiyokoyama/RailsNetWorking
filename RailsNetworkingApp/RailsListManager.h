@@ -9,9 +9,10 @@
 #import <Foundation/Foundation.h>
 
 @interface RailsListManager : NSObject
+typedef void (^PostRemoteCompletionHandler)(NSError *error);
+typedef void (^GetRemoteCompletionHandler)(NSMutableArray *posts, NSError *error);
+
 + (instancetype)sharedManager;
-- (void)postJsonData:(NSString*)text;
-- (void)getJsonData;
-@property (copy) void (^completionHandlerPostRemote)(NSError *error);
-@property (copy) void (^completionHandlerGetRemote)(NSMutableArray *post, NSError *error);
+- (void)postJsonData:(NSString*)text completionHandler:(PostRemoteCompletionHandler)completionHandler;
+- (void)getJsonData:(GetRemoteCompletionHandler)completionHandler;
 @end

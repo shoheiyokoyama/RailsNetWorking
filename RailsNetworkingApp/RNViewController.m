@@ -11,32 +11,30 @@
 #import "RailsListManager.h"
 
 @interface RNViewController ()<UITextFieldDelegate,UITableViewDelegate,UITableViewDataSource>
-@property (nonatomic) UITextField* postText;
+@property (nonatomic) UITextField* textField;
 @property (nonatomic) UIButton *postButton;
-@property (nonatomic) UIButton *getButton;
 @property (nonatomic) UITableView *tableView;
 @property (nonatomic) NSMutableArray *lists;
 @end
 
 @implementation RNViewController
-@synthesize postText;
+@synthesize textField;
 @synthesize postButton;
-@synthesize getButton;
 
 - (instancetype)init
 {
     self = [super init];
     if (self) {
-        postText = [[UITextField alloc]initWithFrame:CGRectMake(5.0f, 50.0f, 0.0f, 25)];
-        postText.placeholder = @"入力";
-        postText.textAlignment = NSTextAlignmentLeft;
-        postText.borderStyle = UITextBorderStyleRoundedRect;
-        postText.font = [UIFont fontWithName:@"Helvetica" size:14];
-        postText.keyboardType = UIKeyboardAppearanceDefault;
-        postText.clearButtonMode = UITextFieldViewModeWhileEditing;
-        postText.delegate = self;
-        [postText becomeFirstResponder];
-        [self.view addSubview:postText];
+        textField = [[UITextField alloc]initWithFrame:CGRectMake(5.0f, 50.0f, 0.0f, 25)];
+        textField.placeholder = @"入力";
+        textField.textAlignment = NSTextAlignmentLeft;
+        textField.borderStyle = UITextBorderStyleRoundedRect;
+        textField.font = [UIFont fontWithName:@"Helvetica" size:14];
+        textField.keyboardType = UIKeyboardAppearanceDefault;
+        textField.clearButtonMode = UITextFieldViewModeWhileEditing;
+        textField.delegate = self;
+        [textField becomeFirstResponder];
+        [self.view addSubview:textField];
         
         postButton = [[UIButton alloc]initWithFrame:CGRectMake(0.0f, 0.0f, 50, 25)];
         [postButton setTitle:@"post" forState:UIControlStateNormal];
@@ -47,16 +45,6 @@
         UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapPostButton:)];
         [postButton addGestureRecognizer:tapGesture];
         [self.view addSubview:postButton];
-        
-        getButton = [[UIButton alloc]initWithFrame:CGRectMake(0.0f, 0.0f, 50, 25)];
-        [getButton setTitle:@"get" forState:UIControlStateNormal];
-        getButton.userInteractionEnabled = YES;
-        getButton.backgroundColor = [UIColor colorWithRed:0.98 green:0.502 blue:0.447 alpha:1.0];
-        getButton.layer.cornerRadius = 3.0f;
-        [getButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-        UITapGestureRecognizer *Gesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapGetButton:)];
-        [getButton addGestureRecognizer:Gesture];
-        [self.view addSubview:getButton];
     }
     return self;
 }
@@ -77,7 +65,8 @@
     [super viewDidLoad];
     
     self.view.backgroundColor = [UIColor whiteColor];
-     [_tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"Cell"];
+    [_tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"Cell"];
+    [self getListsData];
 }
 
 - (void)viewDidLayoutSubviews
@@ -86,22 +75,30 @@
     
     _tableView.frame = [UIScreen mainScreen].bounds;
     CGRect tableFrame = _tableView.frame;
-    tableFrame.origin.y = CGRectGetMaxY(postText.frame) + 30.0f;
+    tableFrame.origin.y = CGRectGetMaxY(textField.frame) + 30.0f;
     _tableView.frame = tableFrame;
     
-    CGRect textFrame = postText.frame;
-    textFrame.size.width = self.view.bounds.size.width - CGRectGetWidth(postButton.frame) - CGRectGetWidth(getButton.frame) - 20.0f;
-    postText.frame = textFrame;
+    CGRect textFrame = textField.frame;
+    textFrame.size.width = self.view.bounds.size.width - CGRectGetWidth(postButton.frame) - 20.0f;
+    textField.frame = textFrame;
     
     CGRect Frame = postButton.frame;
-    Frame.origin.x = CGRectGetMaxX(postText.frame) + 5.0f;
-    Frame.origin.y = CGRectGetMinY(postText.frame);
+    Frame.origin.x = CGRectGetMaxX(textField.frame) + 5.0f;
+    Frame.origin.y = CGRectGetMinY(textField.frame);
     postButton.frame = Frame;
     
-    CGRect gBnF = getButton.frame;
-    gBnF.origin.x = CGRectGetMaxX(postButton.frame) + 5.0f;
-    gBnF.origin.y = CGRectGetMinY(postText.frame);
-    getButton.frame = gBnF;
+}
+
+- (void)getListsData
+{
+    [[RailsListManager sharedManager] getJsonData:^(NSMutableArray *posts, NSError *error)
+     {
+         if (error) {
+             [self showAlert:@"読み込みに失敗しました"];
+         }
+         _lists = posts;
+         [_tableView reloadData];
+    }];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -119,37 +116,44 @@
     if (!cell) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
     }
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
     NSLog(@" tableView : %@", _lists);
     cell.textLabel.text = [_lists objectAtIndex:indexPath.row];
     return cell;
+}
+
+- (void)showAlert:(NSString *)message
+{
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:nil
+                                                        message:message
+                                                       delegate:nil
+                                              cancelButtonTitle:@"OK"
+                                              otherButtonTitles:nil];
+    [alertView show];
 }
 
 # pragma mark - tap Action
 - (void)tapPostButton:(UITapGestureRecognizer *)sender
 {
     NSLog(@"Button tapped.");
-    NSLog(@"%@", postText.text);
-
-    [[RailsListManager sharedManager] postJsonData:postText.text];
-    [RailsListManager sharedManager].completionHandlerPostRemote=^(NSError *error){
-        if (error) {
-            //
-        }
-        postText.text = @"";
-    };
+    NSLog(@"%@", textField.text);
+    
+    if ([textField.text isEqualToString:@""]) {
+        [self showAlert:@"文字を入力してください"];
+    } else {
+        [[RailsListManager sharedManager] postJsonData:textField.text completionHandler:^(NSError *error)
+         {
+             if (error) {
+                 [self showAlert:@"投稿できませんでした"];
+             } else {
+                 textField.text = @"";
+                 [self showAlert:@"投稿を完了しました"];
+                 [self getListsData];
+             }
+         }];
+    }
 }
 
-- (void)tapGetButton:(UITapGestureRecognizer *)sender
-{
-    [[RailsListManager sharedManager] getJsonData];
-    [RailsListManager sharedManager].completionHandlerGetRemote=^(NSMutableArray *posts, NSError * error){
-        if (error) {
-            //
-        }
-        _lists = posts;
-        [_tableView reloadData];
-    };
-}
 
 # pragma mark - UITextFieldDelegate
 - (BOOL)textFieldShouldReturn:(UITextField *)textField

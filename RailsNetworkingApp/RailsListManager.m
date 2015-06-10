@@ -26,7 +26,7 @@ static RailsListManager *sharedManager = nil;
     return sharedManager;
 }
 
-- (void)postJsonData:(NSString*)text
+- (void)postJsonData:(NSString*)text completionHandler:(PostRemoteCompletionHandler)completionHandler
 {
     
     NSDictionary *params = [NSDictionary dictionaryWithObject:text forKey:@"top[name]"];
@@ -38,43 +38,43 @@ static RailsListManager *sharedManager = nil;
           success:^(AFHTTPRequestOperation *operation, id responseObject){
               NSLog(@"success: %@", responseObject);
               
-              if(self.completionHandlerPostRemote){
-                  self.completionHandlerPostRemote(nil);
+              if (completionHandler) {
+                  completionHandler(nil);
               }
           }
           failure:^(AFHTTPRequestOperation *operation, NSError *error){
               NSLog(@"error: %@", error);
               
-              if(self.completionHandlerPostRemote){
-                  self.completionHandlerPostRemote(error);
+              if (completionHandler) {
+                  completionHandler(error);
               }
           }];
 }
 
-- (void)getJsonData
+- (void)getJsonData:(GetRemoteCompletionHandler)completionHandler
 {
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
-    [manager GET:LISTURL parameters:nil
+    [manager GET:LISTURL
+      parameters:nil
          success:^(AFHTTPRequestOperation *operation, id responseObject){
              NSLog(@"success: %@", responseObject);
-             _posts = [NSMutableArray array];
              
+             _posts = [NSMutableArray array];
              for (NSDictionary *jsonObject in responseObject) {
                  [_posts addObject:[jsonObject objectForKey:@"name"]];
              }
-             
-             if (self.completionHandlerGetRemote) {
-                 self.completionHandlerGetRemote(_posts, nil);
+             if (completionHandler) {
+                 completionHandler(_posts, nil);
              }
          }
          failure:^(AFHTTPRequestOperation *operation, NSError *error){
-             
              NSLog(@"error: %@", error);
-             if (self.completionHandlerGetRemote) {
-                 self.completionHandlerGetRemote(nil, error);
+             
+             if (completionHandler) {
+                 completionHandler(nil, error);
              }
          }];
-
+    
 }
 
 @end
