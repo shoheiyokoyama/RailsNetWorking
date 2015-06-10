@@ -1,2 +1,2 @@
 # RailsNetWorking
-railsとiOSの簡単な連携
+AFNetworkingを利用したrailsとiOSの簡単な連携

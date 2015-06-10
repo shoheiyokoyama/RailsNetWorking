@@ -10,6 +10,5 @@
 
 @interface RNViewController : UIViewController
 
-
 @end
 

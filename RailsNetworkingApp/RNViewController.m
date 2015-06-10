@@ -57,20 +57,6 @@
         UITapGestureRecognizer *Gesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapGetButton:)];
         [getButton addGestureRecognizer:Gesture];
         [self.view addSubview:getButton];
-        
-        CGRect textFrame = postText.frame;
-        textFrame.size.width = self.view.bounds.size.width - CGRectGetWidth(postButton.frame) - CGRectGetWidth(getButton.frame) - 20.0f;
-        postText.frame = textFrame;
-        
-        CGRect Frame = postButton.frame;
-        Frame.origin.x = CGRectGetMaxX(postText.frame) + 5.0f;
-        Frame.origin.y = CGRectGetMinY(postText.frame);
-        postButton.frame = Frame;
-        
-        CGRect gBnF = getButton.frame;
-        gBnF.origin.x = CGRectGetMaxX(postButton.frame) + 5.0f;
-        gBnF.origin.y = CGRectGetMinY(postText.frame);
-        getButton.frame = gBnF;
     }
     return self;
 }
@@ -91,7 +77,7 @@
     [super viewDidLoad];
     
     self.view.backgroundColor = [UIColor whiteColor];
-    
+     [_tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"Cell"];
 }
 
 - (void)viewDidLayoutSubviews
@@ -103,7 +89,21 @@
     tableFrame.origin.y = CGRectGetMaxY(postText.frame) + 30.0f;
     _tableView.frame = tableFrame;
     
+    CGRect textFrame = postText.frame;
+    textFrame.size.width = self.view.bounds.size.width - CGRectGetWidth(postButton.frame) - CGRectGetWidth(getButton.frame) - 20.0f;
+    postText.frame = textFrame;
+    
+    CGRect Frame = postButton.frame;
+    Frame.origin.x = CGRectGetMaxX(postText.frame) + 5.0f;
+    Frame.origin.y = CGRectGetMinY(postText.frame);
+    postButton.frame = Frame;
+    
+    CGRect gBnF = getButton.frame;
+    gBnF.origin.x = CGRectGetMaxX(postButton.frame) + 5.0f;
+    gBnF.origin.y = CGRectGetMinY(postText.frame);
+    getButton.frame = gBnF;
 }
+
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     if (_lists.count == 0) {
@@ -112,17 +112,13 @@
     return _lists.count;
 }
 
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    return 40.0f;
-}
-
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString *CellIdentifier = @"Cell";
-    UITableViewCell *cell =
-    [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
-    
+    NSString *cellIdentifier = @"Cell";
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier forIndexPath:indexPath];
+    if (!cell) {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
+    }
     NSLog(@" tableView : %@", _lists);
     cell.textLabel.text = [_lists objectAtIndex:indexPath.row];
     return cell;
@@ -141,12 +137,10 @@
     [manager POST:LISTURL
        parameters:params
           success:^(AFHTTPRequestOperation *operation, id responseObject){
-
               NSLog(@"success: %@", responseObject);
               postText.text = @"";
           }
           failure:^(AFHTTPRequestOperation *operation, NSError *error){
-              
               NSLog(@"error: %@", error);
           }];
     
