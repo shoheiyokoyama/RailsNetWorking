@@ -8,6 +8,7 @@
 
 #import "RNViewController.h"
 #import "RailsListManager.h"
+#import "RailsListCachesManager.h"
 
 @interface RNViewController ()<UITextFieldDelegate,UITableViewDelegate,UITableViewDataSource>
 @property (nonatomic) UITextField* textField;
@@ -71,7 +72,10 @@
     
     self.view.backgroundColor = [UIColor whiteColor];
     [_tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"Cell"];
-    [self getListsData];
+    _lists = [[RailsListCachesManager sharedManager] getData];
+    if (_lists.count == 0) {
+        [self getListsData];
+    }
 }
 
 - (void)viewDidLayoutSubviews
@@ -102,6 +106,7 @@
              [self showAlert:@"読み込みに失敗しました"];
          }
          _lists = posts;
+         [[RailsListCachesManager sharedManager] addData:_lists];
          [_tableView reloadData];
     }];
 }
@@ -143,7 +148,8 @@
     NSLog(@"Button tapped.");
     NSLog(@"%@", textField.text);
     
-    if ([textField.text isEqualToString:@""]) {
+    if ([[[textField text] stringByTrimmingCharactersInSet:
+          [NSCharacterSet whitespaceAndNewlineCharacterSet]] isEqualToString:@""]) {
         [self showAlert:@"文字を入力してください"];
     } else {
         [self.manager postJsonData:textField.text completionHandler:^(NSError *error)
