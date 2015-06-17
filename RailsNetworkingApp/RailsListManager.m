@@ -7,6 +7,7 @@
 //
 
 #import "RailsListManager.h"
+#import "RLPostItems.h"
 #import <AFNetworking.h>
 
 #define LISTURL @"http://localhost:3000/tops.json"
@@ -51,17 +52,33 @@ static RailsListManager *sharedManager = nil;
           }];
 }
 
+- (void)deleteJsonData:(RLPostItems *)post completionHandler:(PostRemoteCompletionHandler)completionHandler
+{
+    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+    manager.requestSerializer = [AFHTTPRequestSerializer serializer];
+//    NSDictionary *params = [NSDictionary dictionaryWithObject:post.postId forKey:@"top[id]"];
+    [manager DELETE:LISTURL
+         parameters:nil
+            success:^(AFHTTPRequestOperation *operation, id responseObject) {
+                //
+            }
+            failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                //
+            }];
+}
+
 - (void)getJsonData:(GetRemoteCompletionHandler)completionHandler
 {
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
     [manager GET:LISTURL
       parameters:nil
          success:^(AFHTTPRequestOperation *operation, id responseObject){
-             NSLog(@"success: %@", responseObject);
-             
+             NSLog(@"success: %@", responseObject);//key name id, name, url
              _posts = [NSMutableArray array];
+             
              for (NSDictionary *jsonObject in responseObject) {
-                 [_posts addObject:[jsonObject objectForKey:@"name"]];
+                 RLPostItems *lists = [[RLPostItems alloc]initWithData:jsonObject];
+                 [_posts addObject:lists];
              }
              if (completionHandler) {
                  completionHandler(_posts, nil);

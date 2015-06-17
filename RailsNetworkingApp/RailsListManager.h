@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "RLPostItems.h"
 
 @interface RailsListManager : NSObject
 typedef void (^PostRemoteCompletionHandler)(NSError *error);
@@ -15,4 +16,5 @@ typedef void (^GetRemoteCompletionHandler)(NSMutableArray *posts, NSError *error
 + (instancetype)sharedManager;
 - (void)postJsonData:(NSString*)text completionHandler:(PostRemoteCompletionHandler)completionHandler;
 - (void)getJsonData:(GetRemoteCompletionHandler)completionHandler;
+- (void)deleteJsonData:(RLPostItems *)post completionHandler:(PostRemoteCompletionHandler)completionHandler;
 @end

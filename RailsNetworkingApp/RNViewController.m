@@ -9,12 +9,15 @@
 #import "RNViewController.h"
 #import "RailsListManager.h"
 #import "RailsListCachesManager.h"
+#import "RLTableViewCell.h"
+#import "RLPostItems.h"
 
 @interface RNViewController ()<UITextFieldDelegate,UITableViewDelegate,UITableViewDataSource>
 @property (nonatomic) UITextField* textField;
 @property (nonatomic) UIButton *postButton;
 @property (nonatomic) UITableView *tableView;
 @property (nonatomic) NSMutableArray *lists;
+@property (nonatomic) RLPostItems *post;
 @property (nonatomic, weak, readonly) RailsListManager *manager;
 @end
 
@@ -26,7 +29,7 @@
 {
     self = [super init];
     if (self) {
-        textField = [[UITextField alloc]initWithFrame:CGRectMake(5.0f, 50.0f, 0.0f, 25)];
+        textField = [[UITextField alloc]initWithFrame:CGRectMake(5.0f, 100.0f, 0.0f, 25)];
         textField.placeholder = @"入力";
         textField.textAlignment = NSTextAlignmentLeft;
         textField.borderStyle = UITextBorderStyleRoundedRect;
@@ -34,7 +37,6 @@
         textField.keyboardType = UIKeyboardAppearanceDefault;
         textField.clearButtonMode = UITextFieldViewModeWhileEditing;
         textField.delegate = self;
-        [textField becomeFirstResponder];
         [self.view addSubview:textField];
         
         postButton = [[UIButton alloc]initWithFrame:CGRectMake(0.0f, 0.0f, 50, 25)];
@@ -46,6 +48,8 @@
         UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapPostButton:)];
         [postButton addGestureRecognizer:tapGesture];
         [self.view addSubview:postButton];
+        
+        self.navigationItem.rightBarButtonItem = self.editButtonItem;
     }
     return self;
 }
@@ -62,6 +66,7 @@
     _tableView = [[UITableView alloc]initWithFrame:CGRectZero style:UITableViewStylePlain];
     _tableView.dataSource = self;
     _tableView.delegate = self;
+    _tableView.backgroundColor = [UIColor grayColor];
     _tableView.separatorStyle = UITableViewCellStyleValue1;
     [self.view addSubview:_tableView];
 }
@@ -72,10 +77,8 @@
     
     self.view.backgroundColor = [UIColor whiteColor];
     [_tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"Cell"];
-    _lists = [[RailsListCachesManager sharedManager] getData];
-    if (_lists.count == 0) {
-        [self getListsData];
-    }
+//    _lists = [[RailsListCachesManager sharedManager] getData];
+    [self getListsData];
 }
 
 - (void)viewDidLayoutSubviews
@@ -84,7 +87,7 @@
     
     _tableView.frame = [UIScreen mainScreen].bounds;
     CGRect tableFrame = _tableView.frame;
-    tableFrame.origin.y = CGRectGetMaxY(textField.frame) + 30.0f;
+    tableFrame.origin.y = CGRectGetMaxY(textField.frame) + 20.0f;
     _tableView.frame = tableFrame;
     
     CGRect textFrame = textField.frame;
@@ -98,6 +101,12 @@
     
 }
 
+- (void)setEditing:(BOOL)editing animated:(BOOL)animated
+{
+    [super setEditing:editing animated:animated];
+    [_tableView setEditing:editing animated:YES];
+}
+
 - (void)getListsData
 {
     [self.manager getJsonData:^(NSMutableArray *posts, NSError *error)
@@ -106,9 +115,10 @@
              [self showAlert:@"読み込みに失敗しました"];
          }
          _lists = posts;
-         [[RailsListCachesManager sharedManager] addData:_lists];
+//         [[RailsListCachesManager sharedManager] addData:_lists];
          [_tableView reloadData];
     }];
+    
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -122,14 +132,29 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     NSString *cellIdentifier = @"Cell";
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier forIndexPath:indexPath];
+    UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:cellIdentifier];
+
     if (!cell) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:cellIdentifier];
     }
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     NSLog(@" tableView : %@", _lists);
-    cell.textLabel.text = [_lists objectAtIndex:indexPath.row];
+    _post = [_lists objectAtIndex:indexPath.row];
+    cell.textLabel.text = _post.text;
+    cell.detailTextLabel.text = [NSString stringWithFormat:@"id ▶︎ %@", _post.postId];
     return cell;
+}
+
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle
+forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (editingStyle == UITableViewCellEditingStyleDelete) {
+        [_lists removeObjectAtIndex:indexPath.row];
+        [_tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
+        [self.manager deleteJsonData:_lists[indexPath.row] completionHandler:^(NSError *error) {
+            //
+        }];
+    }
 }
 
 - (void)showAlert:(NSString *)message

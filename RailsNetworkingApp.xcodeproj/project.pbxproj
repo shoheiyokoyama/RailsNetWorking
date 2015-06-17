@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		34C7439E6DBC9D696CD64924 /* libPods-RailsNetworkingApp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DAC096E78752104813172CA7 /* libPods-RailsNetworkingApp.a */; };
 		6D0989761B2FD85C00290D90 /* RailsListCachesManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D0989751B2FD85C00290D90 /* RailsListCachesManager.m */; };
+		6D0989791B30695000290D90 /* RLPostItems.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D0989781B30695000290D90 /* RLPostItems.m */; };
 		6DB8374B1B244092000AB9AC /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 6DB8374A1B244092000AB9AC /* main.m */; };
 		6DB8374E1B244092000AB9AC /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 6DB8374D1B244092000AB9AC /* AppDelegate.m */; };
 		6DB837511B244092000AB9AC /* RailsNetworkingApp.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 6DB8374F1B244092000AB9AC /* RailsNetworkingApp.xcdatamodeld */; };
@@ -33,6 +34,8 @@
 /* Begin PBXFileReference section */
 		6D0989741B2FD85C00290D90 /* RailsListCachesManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RailsListCachesManager.h; sourceTree = "<group>"; };
 		6D0989751B2FD85C00290D90 /* RailsListCachesManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RailsListCachesManager.m; sourceTree = "<group>"; };
+		6D0989771B30695000290D90 /* RLPostItems.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RLPostItems.h; sourceTree = "<group>"; };
+		6D0989781B30695000290D90 /* RLPostItems.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RLPostItems.m; sourceTree = "<group>"; };
 		6DB837451B244092000AB9AC /* RailsNetworkingApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RailsNetworkingApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6DB837491B244092000AB9AC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6DB8374A1B244092000AB9AC /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -82,6 +85,35 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
+		6D09897A1B31160B00290D90 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				6DB837741B283E7D000AB9AC /* RailsListManager.h */,
+				6DB837751B283E7D000AB9AC /* RailsListManager.m */,
+				6D0989741B2FD85C00290D90 /* RailsListCachesManager.h */,
+				6D0989751B2FD85C00290D90 /* RailsListCachesManager.m */,
+			);
+			name = Model;
+			sourceTree = "<group>";
+		};
+		6D09897B1B31195600290D90 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				6D0989771B30695000290D90 /* RLPostItems.h */,
+				6D0989781B30695000290D90 /* RLPostItems.m */,
+			);
+			name = View;
+			sourceTree = "<group>";
+		};
+		6D09897F1B311AA700290D90 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				6DB837521B244092000AB9AC /* RNViewController.h */,
+				6DB837531B244092000AB9AC /* RNViewController.m */,
+			);
+			name = Controller;
+			sourceTree = "<group>";
+		};
 		6DB8373C1B244092000AB9AC = {
 			isa = PBXGroup;
 			children = (
@@ -107,12 +139,9 @@
 			children = (
 				6DB8374C1B244092000AB9AC /* AppDelegate.h */,
 				6DB8374D1B244092000AB9AC /* AppDelegate.m */,
-				6DB837521B244092000AB9AC /* RNViewController.h */,
-				6DB837531B244092000AB9AC /* RNViewController.m */,
-				6DB837741B283E7D000AB9AC /* RailsListManager.h */,
-				6DB837751B283E7D000AB9AC /* RailsListManager.m */,
-				6D0989741B2FD85C00290D90 /* RailsListCachesManager.h */,
-				6D0989751B2FD85C00290D90 /* RailsListCachesManager.m */,
+				6D09897F1B311AA700290D90 /* Controller */,
+				6D09897B1B31195600290D90 /* View */,
+				6D09897A1B31160B00290D90 /* Model */,
 				6DB837551B244092000AB9AC /* Main.storyboard */,
 				6DB837581B244092000AB9AC /* Images.xcassets */,
 				6DB8375A1B244092000AB9AC /* LaunchScreen.xib */,
@@ -293,6 +322,7 @@
 			files = (
 				6D0989761B2FD85C00290D90 /* RailsListCachesManager.m in Sources */,
 				6DB837761B283E7D000AB9AC /* RailsListManager.m in Sources */,
+				6D0989791B30695000290D90 /* RLPostItems.m in Sources */,
 				6DB837511B244092000AB9AC /* RailsNetworkingApp.xcdatamodeld in Sources */,
 				6DB8374E1B244092000AB9AC /* AppDelegate.m in Sources */,
 				6DB837541B244092000AB9AC /* RNViewController.m in Sources */,
