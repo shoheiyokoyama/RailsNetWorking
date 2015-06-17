@@ -13,4 +13,7 @@
 @property (nonatomic) NSString *text;
 @property (nonatomic) NSNumber *postId;
 @property (nonatomic) NSString *url;
+
+- (instancetype)initWithCoder:(NSCoder *)aDecoder;
+- (void)encodeWithCoder:(NSCoder *)encoder;
 @end

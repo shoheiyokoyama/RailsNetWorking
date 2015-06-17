@@ -8,7 +8,7 @@
 
 #import "RLPostItems.h"
 
-@interface RLPostItems()
+@interface RLPostItems()<NSCoding>
 @end
 
 @implementation RLPostItems
@@ -29,6 +29,24 @@
         
     }
     return self;
+}
+
+- (instancetype)initWithCoder:(NSCoder *)aDecoder
+{
+    self = [super init];
+    if (self) {
+        self.text = [aDecoder decodeObjectForKey:@"text"];
+        self.postId = [aDecoder decodeObjectForKey:@"id"];
+        self.url = [aDecoder decodeObjectForKey:@"url"];
+    }
+    return self;
+}
+
+- (void)encodeWithCoder:(NSCoder *)encoder
+{
+    [encoder encodeObject:self.text forKey:@"text"];
+    [encoder encodeObject:self.postId forKey:@"id"];
+    [encoder encodeObject:self.url forKey:@"url"];
 }
 
 @end

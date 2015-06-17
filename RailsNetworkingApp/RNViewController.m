@@ -77,7 +77,7 @@
     
     self.view.backgroundColor = [UIColor whiteColor];
     [_tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"Cell"];
-//    _lists = [[RailsListCachesManager sharedManager] getData];
+    _lists = [[RailsListCachesManager sharedManager] getData];
     [self getListsData];
 }
 
@@ -115,7 +115,7 @@
              [self showAlert:@"読み込みに失敗しました"];
          }
          _lists = posts;
-//         [[RailsListCachesManager sharedManager] addData:_lists];
+         [[RailsListCachesManager sharedManager] addData:_lists];
          [_tableView reloadData];
     }];
     
